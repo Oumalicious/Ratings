@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Movie Reviews</title>
+</head>
+<style>
+    /* input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    input[type="number"] {
+        -moz-appearance: textfield;
+    } */
+</style>
+<body>
+    <div>
+        <div>
+            <h2>Movie Upload</h2>
+        </div>
+        <div>
+            <div>
+                <div>
+                    Title
+                </div>
+                <input id="movieTitle" type="text" name="${movie.movieTitle}"  autocomplete="off">
+            </div>
+            <div>
+                <div>
+                    Original Title
+                </div>
+                <input id="movieOriginalTitle" type="text" name="${movie.originalTitle}" autocomplete="off"/>
+            </div>
+            <div>
+                <div>
+                    Release Year
+                </div>
+                <input id="movieReleaseYear" type="text" name="${movie.releaseYear}" autocomplete="off"/>
+            </div>
+            <div>
+                <div>
+                    Rating
+                </div>
+                <input id="movieRating" type="text" name="${movie.rating}" autocomplete="off"/>
+            </div>
+            <div>
+                <div>
+                    Origin
+                </div>
+                <input id="movieOrigin" type="text" name="${movie.country}" autocomplete="off"/>
+            </div>
+            <div>
+                <div style="padding: 1vh 0">
+                    <input id="fileUpload" type="file" name="fileUpload" accept="image/*" autocomplete="off"/>
+                    <button id="fileUploadButton" onclick="uploadFile()"> Upload </button>
+                </div>
+            </div>
+        </div>
+        <div id="responseDiv"></div>
+    </div>
+</body>
+<script>
+    async function uploadFile(){
+        let formData = new FormData();
+        
+        //validating title
+        if(movieTitle.value == "") {
+            alert("Invalid title.");
+            return;
+        }
+        formData.append("title", movieTitle.value);
+
+        //validating original title
+        formData.append("originalTitle", movieOriginalTitle.value);
+
+        //validating release year
+        let releaseYear = movieReleaseYear.value;
+        regex=/^[a-zA-Z]+$/;
+        if((releaseYear == "" || isNaN(Number(releaseYear)) || releaseYear.indexOf(".") >= 0 || releaseYear <= 0)){
+            alert("Invalid release year.");
+            return;
+        }
+        formData.append("releaseYear", releaseYear);
+
+        //validating rating
+        let rating = movieRating.value;
+        regex=/^[a-zA-Z]+$/;
+        if((rating == "" || isNaN(Number(rating)) || rating.indexOf(".") == rating.length-1)){
+            alert("Invalid rating.");
+            return;
+        }
+        let ratingNumber = parseInt(rating);
+        if(ratingNumber < 0 || ratingNumber > 10) {
+            alert("Rating must be within the ranges 0 and 10.");
+            return;
+        }
+        formData.append("rating", rating);
+
+        //validating country
+        if(movieOrigin.value == "") {
+            alert("Invalid country.");
+            return;
+        }
+        formData.append("country", movieOrigin.value);
+
+        let file = fileUpload.files[0]
+        formData.append("originalFileName", file.name);
+        
+        let imageData = new FormData();
+        imageData.append("data", fileUpload.files[0])
+
+        const data = Object.fromEntries(formData);
+        let id;
+        let dataJson = await fetch('http://localhost:8080/movie',{
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        }).then((response) => {
+            if(!response.ok) {
+                alert("Error Code: " + response.status);
+                document.getElementById("responseDiv").innerHTML = "Data Failed!";
+            }
+            return response.json()
+        })
+
+        await fetch('http://localhost:8080/movieImage/' + dataJson.id,{
+        method: "POST",
+        body: imageData
+        }).then((imageReponse) => {
+            if(imageReponse.ok) {
+                document.getElementById("responseDiv").innerHTML = "Uploaded!";
+            } else {
+                alert("Error Code: " + imageReponse.status);
+                document.getElementById("responseDiv").innerHTML = "Image Failed!";
+            }
+        })
+    }
+</script>
+</html>
