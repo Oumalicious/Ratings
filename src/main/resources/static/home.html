@@ -16,31 +16,31 @@
                 <div>
                     Title
                 </div>
-                <input id="movieTitle" type="text" name="${movie.movieTitle}"  autocomplete="off">
+                <input id="title" type="text" name="title"  autocomplete="off">
             </div>
             <div>
                 <div>
                     Original Title
                 </div>
-                <input id="movieOriginalTitle" type="text" name="${movie.originalTitle}" autocomplete="off"/>
+                <input id="originalTitle" type="text" name="originalTitle" autocomplete="off"/>
             </div>
             <div>
                 <div>
                     Release Year
                 </div>
-                <input id="movieReleaseYear" type="text" name="${movie.releaseYear}" autocomplete="off"/>
+                <input id="releaseYear" type="text" name="releaseYear" autocomplete="off"/>
             </div>
             <div>
                 <div>
                     Rating
                 </div>
-                <input id="movieRating" type="text" name="${movie.rating}" autocomplete="off"/>
+                <input id="rating" type="text" name="rating" autocomplete="off"/>
             </div>
             <div>
                 <div>
                     Origin
                 </div>
-                <input id="movieOrigin" type="text" name="${movie.country}" autocomplete="off"/>
+                <input id="origin" type="text" name="origin" autocomplete="off"/>
             </div>
             <div>
                 <div style="padding: 1vh 0">
@@ -57,44 +57,44 @@
         let formData = new FormData();
         
         //validating title
-        if(movieTitle.value == "") {
+        if(title.value == "") {
             alert("Invalid title.");
             return;
         }
-        formData.append("title", movieTitle.value);
+        formData.append("title", title.value);
 
         //validating original title
-        formData.append("originalTitle", movieOriginalTitle.value);
+        formData.append("originalTitle", originalTitle.value);
 
         //validating release year
-        let releaseYear = movieReleaseYear.value;
+        let releaseYearString = releaseYear.value;
         regex=/^[a-zA-Z]+$/;
-        if((releaseYear == "" || isNaN(Number(releaseYear)) || releaseYear.indexOf(".") >= 0 || releaseYear <= 0)){
+        if((releaseYearString == "" || isNaN(Number(releaseYearString)) || releaseYearString.indexOf(".") >= 0 || releaseYearString <= 0)){
             alert("Invalid release year.");
             return;
         }
-        formData.append("releaseYear", releaseYear);
+        formData.append("releaseYear", releaseYear.value);
 
         //validating rating
-        let rating = movieRating.value;
+        let ratingString = rating.value;
         regex=/^[a-zA-Z]+$/;
-        if((rating == "" || isNaN(Number(rating)) || rating.indexOf(".") == rating.length-1)){
+        if((ratingString == "" || isNaN(Number(ratingString)) || ratingString.indexOf(".") == ratingString.length-1)){
             alert("Invalid rating.");
             return;
         }
-        let ratingNumber = parseInt(rating);
+        let ratingNumber = parseInt(ratingString);
         if(ratingNumber < 0 || ratingNumber > 10) {
             alert("Rating must be within the ranges 0 and 10.");
             return;
         }
-        formData.append("rating", rating);
+        formData.append("rating", rating.value);
 
         //validating country
-        if(movieOrigin.value == "") {
+        if(origin.value == "") {
             alert("Invalid country.");
             return;
         }
-        formData.append("country", movieOrigin.value);
+        formData.append("country", origin.value);
 
         let file = fileUpload.files[0]
         formData.append("originalFileName", file.name);
@@ -118,6 +118,10 @@
             return response.json()
         })
 
+        if(!dataJson) {
+            return;
+        }
+        
         await fetch('http://localhost:8080/movieImage/' + dataJson.id,{
         method: "POST",
         body: imageData
