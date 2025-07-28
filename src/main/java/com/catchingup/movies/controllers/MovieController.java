@@ -1,4 +1,4 @@
-package com.catchingup.movies;
+package com.catchingup.movies.controllers;
 
 import java.io.IOException;
 import java.net.URI;
@@ -6,6 +6,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collection;
 
+import com.catchingup.movies.entities.MovieEntity;
+import com.catchingup.movies.services.MovieService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -15,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import static com.catchingup.movies.MovieConstants.PHOTO_DIRECTORY;
+import static com.catchingup.movies.constants.MovieConstants.PHOTO_DIRECTORY;
 import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
 

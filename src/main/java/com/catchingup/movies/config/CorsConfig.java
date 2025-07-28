@@ -8,7 +8,7 @@ import org.springframework.web.filter.CorsFilter;
 
 import java.util.List;
 
-import static com.catchingup.movies.MovieConstants.X_REQUESTED_WITH;
+import static com.catchingup.movies.constants.MovieConstants.X_REQUESTED_WITH;
 import static org.springframework.http.HttpHeaders.ACCEPT;
 import static org.springframework.http.HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS;
 import static org.springframework.http.HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN;

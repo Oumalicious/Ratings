@@ -1,4 +1,4 @@
-package com.catchingup.movies;
+package com.catchingup.movies.entities;
 
 
 import jakarta.persistence.Entity;
